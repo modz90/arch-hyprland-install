@@ -21,11 +21,18 @@ deploy() {
   echo "    ${dst}"
 }
 
-deploy "${REPO_DIR}/dotfiles/hypr"    "${HOME}/.config/hypr"
-deploy "${REPO_DIR}/dotfiles/kitty"   "${HOME}/.config/kitty"
-deploy "${REPO_DIR}/dotfiles/waybar"  "${HOME}/.config/waybar"
-deploy "${REPO_DIR}/dotfiles/wofi"    "${HOME}/.config/wofi"
-deploy "${REPO_DIR}/dotfiles/mako"    "${HOME}/.config/mako"
+deploy "${REPO_DIR}/dotfiles/hypr"       "${HOME}/.config/hypr"
+deploy "${REPO_DIR}/dotfiles/kitty"      "${HOME}/.config/kitty"
+deploy "${REPO_DIR}/dotfiles/waybar"     "${HOME}/.config/waybar"
+deploy "${REPO_DIR}/dotfiles/wofi"       "${HOME}/.config/wofi"
+deploy "${REPO_DIR}/dotfiles/mako"       "${HOME}/.config/mako"
+deploy "${REPO_DIR}/dotfiles/gtk-3.0"    "${HOME}/.config/gtk-3.0"
+deploy "${REPO_DIR}/dotfiles/gtk-4.0"    "${HOME}/.config/gtk-4.0"
+deploy "${REPO_DIR}/dotfiles/fuzzel"     "${HOME}/.config/fuzzel"
+deploy "${REPO_DIR}/dotfiles/cava"       "${HOME}/.config/cava"
+deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
+deploy "${REPO_DIR}/dotfiles/zsh/.zshrc" "${HOME}/.zshrc"
+deploy "${REPO_DIR}/dotfiles/starship/starship.toml" "${HOME}/.config/starship.toml"
 
 # --- Apps ---------------------------------------------------------------------
 echo "==> Installing VSCode"
@@ -61,6 +68,87 @@ sudo pacman -S --noconfirm playerctl
 
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
+
+# --- Hyprland Extras ----------------------------------------------------------
+echo "==> Installing hyprsunset (color temperature / night mode)"
+yay -S --noconfirm hyprsunset
+
+# --- System Utilities ---------------------------------------------------------
+echo "==> Installing nwg-displays (monitor config GUI)"
+yay -S --noconfirm nwg-displays
+
+echo "==> Installing ddcutil (external monitor brightness)"
+sudo pacman -S --noconfirm ddcutil
+
+echo "==> Installing ydotool (input automation)"
+yay -S --noconfirm ydotool
+
+echo "==> Installing jq + yq (JSON/YAML tools)"
+sudo pacman -S --noconfirm jq
+yay -S --noconfirm go-yq
+
+# --- Productivity -------------------------------------------------------------
+echo "==> Installing thunar (file manager)"
+sudo pacman -S --noconfirm thunar thunar-volman gvfs
+
+echo "==> Installing qalculate (calculator)"
+sudo pacman -S --noconfirm qalculate-gtk
+
+# --- Media & Audio ------------------------------------------------------------
+echo "==> Installing easyeffects (audio effects & EQ)"
+sudo pacman -S --noconfirm easyeffects
+
+echo "==> Installing pavucontrol-qt (per-app volume mixer)"
+sudo pacman -S --noconfirm pavucontrol-qt
+
+echo "==> Installing songrec (music recognition)"
+yay -S --noconfirm songrec
+
+# --- Screenshot & Recording ---------------------------------------------------
+echo "==> Installing swappy (screenshot annotation)"
+sudo pacman -S --noconfirm swappy
+
+echo "==> Installing wf-recorder (screen recording)"
+sudo pacman -S --noconfirm wf-recorder
+
+echo "==> Installing grim + slurp (screenshot region selection)"
+sudo pacman -S --noconfirm grim slurp
+
+echo "==> Installing tesseract + English data (OCR)"
+sudo pacman -S --noconfirm tesseract tesseract-data-eng
+
+# --- Theming ------------------------------------------------------------------
+echo "==> Installing adw-gtk-theme (modern GTK theme)"
+yay -S --noconfirm adw-gtk-theme
+
+echo "==> Installing Bibata cursor theme"
+yay -S --noconfirm bibata-cursor-theme-bin
+
+echo "==> Installing JetBrains Mono Nerd Font"
+sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd
+
+echo "==> Installing Kvantum (Qt theme manager)"
+sudo pacman -S --noconfirm kvantum
+
+echo "==> Installing matugen (Material You wallpaper color generator)"
+yay -S --noconfirm matugen-bin
+
+# --- Bar & Launcher -----------------------------------------------------------
+echo "==> Installing fuzzel (app launcher)"
+sudo pacman -S --noconfirm fuzzel
+
+echo "==> Installing cava (audio visualizer)"
+sudo pacman -S --noconfirm cava
+
+# --- Shell & Terminal ---------------------------------------------------------
+echo "==> Installing fish shell"
+sudo pacman -S --noconfirm fish
+
+echo "==> Installing zsh"
+sudo pacman -S --noconfirm zsh
+
+echo "==> Installing starship prompt"
+sudo pacman -S --noconfirm starship
 
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."
