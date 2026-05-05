@@ -26,6 +26,8 @@ deploy "${REPO_DIR}/dotfiles/kitty"      "${HOME}/.config/kitty"
 deploy "${REPO_DIR}/dotfiles/waybar"     "${HOME}/.config/waybar"
 deploy "${REPO_DIR}/dotfiles/wofi"       "${HOME}/.config/wofi"
 deploy "${REPO_DIR}/dotfiles/mako"       "${HOME}/.config/mako"
+deploy "${REPO_DIR}/dotfiles/fuzzel"     "${HOME}/.config/fuzzel"
+deploy "${REPO_DIR}/dotfiles/cava"       "${HOME}/.config/cava"
 deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
 deploy "${REPO_DIR}/dotfiles/zsh/.zshrc" "${HOME}/.zshrc"
 deploy "${REPO_DIR}/dotfiles/starship/starship.toml" "${HOME}/.config/starship.toml"
@@ -64,6 +66,13 @@ sudo pacman -S --noconfirm playerctl
 
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
+
+# --- Bar & Launcher -----------------------------------------------------------
+echo "==> Installing fuzzel (app launcher)"
+sudo pacman -S --noconfirm fuzzel
+
+echo "==> Installing cava (audio visualizer)"
+sudo pacman -S --noconfirm cava
 
 # --- Shell & Terminal ---------------------------------------------------------
 echo "==> Installing fish shell"
