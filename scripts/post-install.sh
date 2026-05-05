@@ -21,11 +21,14 @@ deploy() {
   echo "    ${dst}"
 }
 
-deploy "${REPO_DIR}/dotfiles/hypr"    "${HOME}/.config/hypr"
-deploy "${REPO_DIR}/dotfiles/kitty"   "${HOME}/.config/kitty"
-deploy "${REPO_DIR}/dotfiles/waybar"  "${HOME}/.config/waybar"
-deploy "${REPO_DIR}/dotfiles/wofi"    "${HOME}/.config/wofi"
-deploy "${REPO_DIR}/dotfiles/mako"    "${HOME}/.config/mako"
+deploy "${REPO_DIR}/dotfiles/hypr"       "${HOME}/.config/hypr"
+deploy "${REPO_DIR}/dotfiles/kitty"      "${HOME}/.config/kitty"
+deploy "${REPO_DIR}/dotfiles/waybar"     "${HOME}/.config/waybar"
+deploy "${REPO_DIR}/dotfiles/wofi"       "${HOME}/.config/wofi"
+deploy "${REPO_DIR}/dotfiles/mako"       "${HOME}/.config/mako"
+deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
+deploy "${REPO_DIR}/dotfiles/zsh/.zshrc" "${HOME}/.zshrc"
+deploy "${REPO_DIR}/dotfiles/starship/starship.toml" "${HOME}/.config/starship.toml"
 
 # --- Apps ---------------------------------------------------------------------
 echo "==> Installing VSCode"
@@ -61,6 +64,16 @@ sudo pacman -S --noconfirm playerctl
 
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
+
+# --- Shell & Terminal ---------------------------------------------------------
+echo "==> Installing fish shell"
+sudo pacman -S --noconfirm fish
+
+echo "==> Installing zsh"
+sudo pacman -S --noconfirm zsh
+
+echo "==> Installing starship prompt"
+sudo pacman -S --noconfirm starship
 
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."
