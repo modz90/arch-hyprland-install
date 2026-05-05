@@ -26,6 +26,8 @@ deploy "${REPO_DIR}/dotfiles/kitty"      "${HOME}/.config/kitty"
 deploy "${REPO_DIR}/dotfiles/waybar"     "${HOME}/.config/waybar"
 deploy "${REPO_DIR}/dotfiles/wofi"       "${HOME}/.config/wofi"
 deploy "${REPO_DIR}/dotfiles/mako"       "${HOME}/.config/mako"
+deploy "${REPO_DIR}/dotfiles/gtk-3.0"    "${HOME}/.config/gtk-3.0"
+deploy "${REPO_DIR}/dotfiles/gtk-4.0"    "${HOME}/.config/gtk-4.0"
 deploy "${REPO_DIR}/dotfiles/fuzzel"     "${HOME}/.config/fuzzel"
 deploy "${REPO_DIR}/dotfiles/cava"       "${HOME}/.config/cava"
 deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
@@ -66,6 +68,22 @@ sudo pacman -S --noconfirm playerctl
 
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
+
+# --- Theming ------------------------------------------------------------------
+echo "==> Installing adw-gtk-theme (modern GTK theme)"
+yay -S --noconfirm adw-gtk-theme
+
+echo "==> Installing Bibata cursor theme"
+yay -S --noconfirm bibata-cursor-theme-bin
+
+echo "==> Installing JetBrains Mono Nerd Font"
+sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd
+
+echo "==> Installing Kvantum (Qt theme manager)"
+sudo pacman -S --noconfirm kvantum
+
+echo "==> Installing matugen (Material You wallpaper color generator)"
+yay -S --noconfirm matugen-bin
 
 # --- Bar & Launcher -----------------------------------------------------------
 echo "==> Installing fuzzel (app launcher)"
