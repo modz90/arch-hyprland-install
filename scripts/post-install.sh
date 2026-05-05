@@ -56,5 +56,11 @@ yay -S --noconfirm cliphist
 echo "==> Installing btop (system monitor)"
 sudo pacman -S --noconfirm btop
 
+echo "==> Installing playerctl (media key support)"
+sudo pacman -S --noconfirm playerctl
+
+echo "==> Installing hyprpicker (color picker)"
+yay -S --noconfirm hyprpicker
+
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."
