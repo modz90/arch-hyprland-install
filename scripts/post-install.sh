@@ -69,6 +69,10 @@ sudo pacman -S --noconfirm playerctl
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
 
+# --- Hyprland Extras ----------------------------------------------------------
+echo "==> Installing hyprsunset (color temperature / night mode)"
+yay -S --noconfirm hyprsunset
+
 # --- System Utilities ---------------------------------------------------------
 echo "==> Installing nwg-displays (monitor config GUI)"
 yay -S --noconfirm nwg-displays
