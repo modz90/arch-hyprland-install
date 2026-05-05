@@ -1,36 +1,83 @@
 * {
-    font-family: "JetBrains Mono", monospace;
+    font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
     font-size: 12px;
     border: none;
     border-radius: 0;
     min-height: 0;
+    padding: 0;
+    margin: 0;
 }
 
 window#waybar {
-    background: rgba(46, 52, 64, 0.92);
+    background: transparent;
     color: #D8DEE9;
 }
 
+/* ── Pill base ───────────────────────────────────────────────────────────────*/
+#custom-launcher,
+#mpris,
+#custom-weather,
+#clock,
+#workspaces,
+#pulseaudio,
+#network,
+#battery,
+#tray {
+    background: rgba(20, 20, 20, 0.82);
+    border-radius: 20px;
+    padding: 3px 12px;
+    margin: 6px 3px;
+    color: #D8DEE9;
+}
+
+/* ── Launcher ────────────────────────────────────────────────────────────────*/
+#custom-launcher {
+    font-size: 15px;
+    padding: 3px 14px;
+    color: #88C0D0;
+}
+
+/* ── Workspaces ──────────────────────────────────────────────────────────────*/
+#workspaces {
+    padding: 3px 6px;
+}
+
 #workspaces button {
-    padding: 0 8px;
-    color: #81A1C1;
+    background: transparent;
+    color: #4C566A;
+    padding: 0 6px;
+    border-radius: 20px;
+    min-width: 18px;
 }
 
 #workspaces button.active {
     color: #88C0D0;
-    border-bottom: 2px solid #88C0D0;
+    background: rgba(136, 192, 208, 0.15);
 }
 
-#clock, #pulseaudio, #battery, #network, #tray,
-#cpu, #memory, #disk {
-    padding: 0 10px;
+#workspaces button:hover {
+    background: rgba(216, 222, 233, 0.08);
     color: #D8DEE9;
 }
 
-#cpu.warning    { color: #EBCB8B; }
-#cpu.critical   { color: #BF616A; }
-#memory.warning { color: #EBCB8B; }
-#memory.critical { color: #BF616A; }
+/* ── Clock ───────────────────────────────────────────────────────────────────*/
+#clock {
+    font-weight: bold;
+}
 
-#battery.warning { color: #EBCB8B; }
+/* ── Status pills ────────────────────────────────────────────────────────────*/
+#battery.warning  { color: #EBCB8B; }
 #battery.critical { color: #BF616A; }
+
+#pulseaudio.muted { color: #4C566A; }
+
+#network.disconnected { color: #4C566A; }
+
+/* ── Tray ────────────────────────────────────────────────────────────────────*/
+#tray {
+    padding: 3px 10px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
