@@ -1,0 +1,12 @@
+font=JetBrains Mono 11
+background-color=#2E3440
+text-color=#D8DEE9
+border-color=#4C566A
+border-size=1
+border-radius=4
+default-timeout=5000
+max-visible=5
+margin=10
+padding=10
+width=300
+height=100

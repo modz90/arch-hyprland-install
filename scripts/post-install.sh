@@ -25,6 +25,7 @@ deploy "${REPO_DIR}/dotfiles/hypr"    "${HOME}/.config/hypr"
 deploy "${REPO_DIR}/dotfiles/kitty"   "${HOME}/.config/kitty"
 deploy "${REPO_DIR}/dotfiles/waybar"  "${HOME}/.config/waybar"
 deploy "${REPO_DIR}/dotfiles/wofi"    "${HOME}/.config/wofi"
+deploy "${REPO_DIR}/dotfiles/mako"    "${HOME}/.config/mako"
 
 # --- Apps ---------------------------------------------------------------------
 echo "==> Installing VSCode"
@@ -37,6 +38,23 @@ echo "==> Installing Claude CLI"
 # requires Node.js
 sudo pacman -S --noconfirm nodejs npm
 sudo npm install -g @anthropic-ai/claude-code
+
+# --- Notifications, lock screen, clipboard, wallpaper, system monitor ---------
+echo "==> Installing mako (notification daemon)"
+sudo pacman -S --noconfirm mako
+
+echo "==> Installing hyprlock + hypridle (screen lock & idle)"
+yay -S --noconfirm hyprlock hypridle
+
+echo "==> Installing hyprpaper (wallpaper)"
+yay -S --noconfirm hyprpaper
+
+echo "==> Installing cliphist + wl-clipboard (clipboard history)"
+sudo pacman -S --noconfirm wl-clipboard
+yay -S --noconfirm cliphist
+
+echo "==> Installing btop (system monitor)"
+sudo pacman -S --noconfirm btop
 
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."
