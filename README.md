@@ -1,13 +1,13 @@
 # Arch Linux + Hyprland Install Guide
 
-Personal install guide for Arch Linux with Hyprland on a Seagate 466 GB external drive.
+Personal install guide for Arch Linux with Hyprland on a 128 GB Samsung USB drive.
 
 **Hardware:**
 - CPU: Intel Celeron N4020
 - GPU: Intel UHD Graphics 600 (integrated)
 - RAM: ~4 GB
 - Boot: UEFI, Secure Boot OFF
-- Target drive: ~466 GB (confirm with `lsblk` — do NOT wipe the Windows drive)
+- Target drive: 128 GB Samsung USB — **64 GB for Arch, 64 GB exFAT storage**
 
 ---
 
@@ -41,7 +41,7 @@ lsblk
 
 You should see:
 - A small drive (~58 GB) — this is the **Windows drive**, DO NOT touch it
-- A ~466 GB drive — this is your **target install drive**
+- A ~128 GB drive — this is your **Samsung USB install drive**
 
 Take note of the device name, e.g. `/dev/sdb`. Replace `sdX` in all commands below with your drive letter.
 
@@ -55,15 +55,18 @@ cfdisk /dev/sdX
 
 In cfdisk:
 1. Select `gpt` if prompted
-2. Create 3 partitions:
+2. Create 4 partitions:
 
-| Partition | Size      | Type             | Mount point  |
-|-----------|-----------|------------------|--------------|
-| sdX1      | 512M      | EFI System       | /boot/efi    |
-| sdX2      | 4G        | Linux swap       | swap         |
-| sdX3      | remaining | Linux filesystem | /            |
+| Partition | Size  | Type             | Mount point  |
+|-----------|-------|------------------|--------------|
+| sdX1      | 512M  | EFI System       | /boot/efi    |
+| sdX2      | 4G    | Linux swap       | swap         |
+| sdX3      | 59.5G | Linux filesystem | /            |
+| sdX4      | 64G   | Microsoft basic  | (storage)    |
 
 3. **Write** then **Quit**
+
+> sdX4 will be formatted as exFAT so it's readable on Windows and Linux.
 
 ---
 
@@ -73,11 +76,14 @@ In cfdisk:
 mkfs.fat -F32 /dev/sdX1
 mkswap /dev/sdX2
 mkfs.ext4 /dev/sdX3
+mkfs.exfat -n STORAGE /dev/sdX4   # readable on Windows too
 
 mount /dev/sdX3 /mnt
 swapon /dev/sdX2
 mount --mkdir /dev/sdX1 /mnt/boot/efi
 ```
+
+> `exfat-utils` is included in the Arch live ISO. The storage partition (sdX4) is not mounted during install — it will auto-mount in your desktop after reboot.
 
 ---
 
