@@ -1,0 +1,9 @@
+width=400
+lines=8
+location=center
+show=drun
+prompt=Search
+insensitive=true
+allow_markup=false
+no_actions=true
+gtk_dark=true
