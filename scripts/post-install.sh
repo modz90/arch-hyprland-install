@@ -46,8 +46,8 @@ sudo pacman -S --noconfirm mako
 echo "==> Installing hyprlock + hypridle (screen lock & idle)"
 yay -S --noconfirm hyprlock hypridle
 
-echo "==> Installing hyprpaper (wallpaper)"
-yay -S --noconfirm hyprpaper
+echo "==> Installing swww (animated wallpaper daemon)"
+sudo pacman -S --noconfirm swww
 
 echo "==> Installing cliphist + wl-clipboard (clipboard history)"
 sudo pacman -S --noconfirm wl-clipboard
