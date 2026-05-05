@@ -21,10 +21,16 @@ window#waybar {
     border-bottom: 2px solid #88C0D0;
 }
 
-#clock, #pulseaudio, #battery, #network, #tray {
+#clock, #pulseaudio, #battery, #network, #tray,
+#cpu, #memory, #disk {
     padding: 0 10px;
     color: #D8DEE9;
 }
+
+#cpu.warning    { color: #EBCB8B; }
+#cpu.critical   { color: #BF616A; }
+#memory.warning { color: #EBCB8B; }
+#memory.critical { color: #BF616A; }
 
 #battery.warning { color: #EBCB8B; }
 #battery.critical { color: #BF616A; }

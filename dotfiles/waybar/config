@@ -4,7 +4,7 @@
     "height": 28,
     "modules-left":   ["hyprland/workspaces"],
     "modules-center": ["clock"],
-    "modules-right":  ["pulseaudio", "battery", "network", "tray"],
+    "modules-right":  ["cpu", "memory", "disk", "pulseaudio", "battery", "network", "tray"],
 
     "hyprland/workspaces": {
         "format": "{id}",
@@ -33,6 +33,25 @@
         "format-ethernet": "  wired",
         "format-disconnected": "  off",
         "tooltip-format": "{ifname}: {ipaddr}"
+    },
+
+    "cpu": {
+        "format": " {usage}%",
+        "interval": 2,
+        "tooltip": false
+    },
+
+    "memory": {
+        "format": " {percentage}%",
+        "interval": 5,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G"
+    },
+
+    "disk": {
+        "path": "/",
+        "format": " {percentage_used}%",
+        "interval": 30,
+        "tooltip-format": "{used} / {total}"
     },
 
     "tray": {
