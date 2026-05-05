@@ -69,6 +69,13 @@ sudo pacman -S --noconfirm playerctl
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
 
+# --- Productivity -------------------------------------------------------------
+echo "==> Installing thunar (file manager)"
+sudo pacman -S --noconfirm thunar thunar-volman gvfs
+
+echo "==> Installing qalculate (calculator)"
+sudo pacman -S --noconfirm qalculate-gtk
+
 # --- Media & Audio ------------------------------------------------------------
 echo "==> Installing easyeffects (audio effects & EQ)"
 sudo pacman -S --noconfirm easyeffects
