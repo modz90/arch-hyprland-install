@@ -69,6 +69,19 @@ sudo pacman -S --noconfirm playerctl
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
 
+# --- Screenshot & Recording ---------------------------------------------------
+echo "==> Installing swappy (screenshot annotation)"
+sudo pacman -S --noconfirm swappy
+
+echo "==> Installing wf-recorder (screen recording)"
+sudo pacman -S --noconfirm wf-recorder
+
+echo "==> Installing grim + slurp (screenshot region selection)"
+sudo pacman -S --noconfirm grim slurp
+
+echo "==> Installing tesseract + English data (OCR)"
+sudo pacman -S --noconfirm tesseract tesseract-data-eng
+
 # --- Theming ------------------------------------------------------------------
 echo "==> Installing adw-gtk-theme (modern GTK theme)"
 yay -S --noconfirm adw-gtk-theme
