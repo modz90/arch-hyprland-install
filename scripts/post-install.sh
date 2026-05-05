@@ -69,6 +69,16 @@ sudo pacman -S --noconfirm playerctl
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
 
+# --- Media & Audio ------------------------------------------------------------
+echo "==> Installing easyeffects (audio effects & EQ)"
+sudo pacman -S --noconfirm easyeffects
+
+echo "==> Installing pavucontrol-qt (per-app volume mixer)"
+sudo pacman -S --noconfirm pavucontrol-qt
+
+echo "==> Installing songrec (music recognition)"
+yay -S --noconfirm songrec
+
 # --- Screenshot & Recording ---------------------------------------------------
 echo "==> Installing swappy (screenshot annotation)"
 sudo pacman -S --noconfirm swappy
