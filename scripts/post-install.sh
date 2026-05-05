@@ -26,5 +26,17 @@ deploy "${REPO_DIR}/dotfiles/kitty"   "${HOME}/.config/kitty"
 deploy "${REPO_DIR}/dotfiles/waybar"  "${HOME}/.config/waybar"
 deploy "${REPO_DIR}/dotfiles/wofi"    "${HOME}/.config/wofi"
 
+# --- Apps ---------------------------------------------------------------------
+echo "==> Installing VSCode"
+yay -S --noconfirm visual-studio-code-bin
+
+echo "==> Installing Discord"
+yay -S --noconfirm discord
+
+echo "==> Installing Claude CLI"
+# requires Node.js
+sudo pacman -S --noconfirm nodejs npm
+sudo npm install -g @anthropic-ai/claude-code
+
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."

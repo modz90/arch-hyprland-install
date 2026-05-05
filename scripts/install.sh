@@ -24,13 +24,15 @@ parted -s "${DEVICE}" \
   mkpart ESP fat32 1MiB 513MiB \
   set 1 esp on \
   mkpart swap linux-swap 513MiB 4.5GiB \
-  mkpart root ext4 4.5GiB 100%
+  mkpart root ext4 4.5GiB 64GiB \
+  mkpart storage 64GiB 100%
 
 # --- Format -------------------------------------------------------------------
 echo "==> Formatting"
-mkfs.fat -F32 "${DEVICE}1"
-mkswap      "${DEVICE}2"
-mkfs.ext4 -F "${DEVICE}3"
+mkfs.fat  -F32 "${DEVICE}1"
+mkswap         "${DEVICE}2"
+mkfs.ext4 -F   "${DEVICE}3"
+mkfs.exfat -n STORAGE "${DEVICE}4"   # 64 GB storage partition, readable on Windows
 
 # --- Mount --------------------------------------------------------------------
 echo "==> Mounting"
