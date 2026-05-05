@@ -23,11 +23,12 @@ window#waybar {
 #network,
 #battery,
 #tray {
-    background: rgba(20, 20, 20, 0.82);
+    background: rgba(46, 52, 64, 0.88);
     border-radius: 20px;
     padding: 3px 12px;
     margin: 6px 3px;
     color: #D8DEE9;
+    border: 1px solid rgba(76, 86, 106, 0.4);
 }
 
 /* ── Launcher ────────────────────────────────────────────────────────────────*/
