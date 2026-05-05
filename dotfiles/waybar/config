@@ -40,7 +40,31 @@
     },
 
     "hyprland/workspaces": {
-        "format": "{id}",
+        "format": "{id} {windows}",
+        "format-window-separator": " ",
+        "window-rewrite-default": "󰣆",
+        "window-rewrite": {
+            "title<.*YouTube.*>": "󰿉",
+            "class<firefox>": "󰈹",
+            "class<chromium>": "󰊯",
+            "class<kitty>": "",
+            "class<foot>": "",
+            "class<code>|class<code-oss>": "󰨞",
+            "class<visual-studio-code.*>": "󰨞",
+            "class<thunar>": "󰉋",
+            "class<dolphin>": "󰉋",
+            "class<discord>": "󰙯",
+            "class<vesktop>": "󰙯",
+            "class<spotify>": "󰓇",
+            "class<mpv>": "󰎁",
+            "class<vlc>": "󰕼",
+            "class<pavucontrol.*>": "󰕾",
+            "class<easyeffects>": "󰸎",
+            "class<qalculate.*>": "󰃬",
+            "class<nwg-displays>": "󰍹",
+            "class<.*hyprshot.*>": "󰹑",
+            "class<swappy>": "󰹑"
+        },
         "on-click": "activate"
     },
 

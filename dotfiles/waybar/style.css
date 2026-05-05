@@ -60,6 +60,11 @@ window#waybar {
     color: #D8DEE9;
 }
 
+#workspaces button .app-icon {
+    font-size: 11px;
+    margin: 0 1px;
+}
+
 /* ── Clock ───────────────────────────────────────────────────────────────────*/
 #clock {
     font-weight: bold;
