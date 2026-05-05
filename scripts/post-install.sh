@@ -69,6 +69,20 @@ sudo pacman -S --noconfirm playerctl
 echo "==> Installing hyprpicker (color picker)"
 yay -S --noconfirm hyprpicker
 
+# --- System Utilities ---------------------------------------------------------
+echo "==> Installing nwg-displays (monitor config GUI)"
+yay -S --noconfirm nwg-displays
+
+echo "==> Installing ddcutil (external monitor brightness)"
+sudo pacman -S --noconfirm ddcutil
+
+echo "==> Installing ydotool (input automation)"
+yay -S --noconfirm ydotool
+
+echo "==> Installing jq + yq (JSON/YAML tools)"
+sudo pacman -S --noconfirm jq
+yay -S --noconfirm go-yq
+
 # --- Productivity -------------------------------------------------------------
 echo "==> Installing thunar (file manager)"
 sudo pacman -S --noconfirm thunar thunar-volman gvfs
