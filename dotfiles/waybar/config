@@ -45,25 +45,75 @@
         "window-rewrite-default": "󰣆",
         "window-rewrite": {
             "title<.*YouTube.*>": "󰿉",
+
             "class<firefox>": "󰈹",
             "class<chromium>": "󰊯",
+            "class<brave-browser>": "󰖟",
+            "class<google-chrome>": "󰊯",
+            "class<vivaldi.*>": "󰖟",
+            "class<tor browser>": "󰈹",
+
             "class<kitty>": "",
             "class<foot>": "",
+            "class<alacritty>": "",
+            "class<wezterm>": "",
+            "class<org.wezfurlong.wezterm>": "",
+
             "class<code>|class<code-oss>": "󰨞",
             "class<visual-studio-code.*>": "󰨞",
+            "class<cursor.*>": "󰨞",
+            "class<neovide>": "",
+            "class<nvim>": "",
+            "class<emacs.*>": "",
+            "class<sublime.*>": "",
+            "class<jetbrains.*>": "󰫍",
+
             "class<thunar>": "󰉋",
             "class<dolphin>": "󰉋",
+            "class<nautilus>": "󰉋",
+            "class<nemo>": "󰉋",
+            "class<pcmanfm.*>": "󰉋",
+
             "class<discord>": "󰙯",
             "class<vesktop>": "󰙯",
+            "class<slack>": "󰒱",
+            "class<telegram.*>|class<org.telegram.*>": "󰔁",
+            "class<signal>": "󰍡",
+            "class<thunderbird>": "󰇮",
+
             "class<spotify>": "󰓇",
             "class<mpv>": "󰎁",
             "class<vlc>": "󰕼",
+            "class<rhythmbox>": "󰓃",
+            "class<cava>": "󰝚",
+            "class<audacity>": "󰗅",
+
+            "class<steam>": "󰓓",
+            "class<lutris>": "󰺵",
+            "class<heroic>": "󰺵",
+            "class<minecraft.*>": "󰍳",
+            "class<prismlauncher>": "󰍳",
+
+            "class<obsidian>": "󰎚",
+            "class<zathura>": "󰈦",
+            "class<evince>": "󰈦",
+            "class<libreoffice.*>": "󰈙",
+            "class<soffice>": "󰈙",
+
+            "class<gimp.*>": "󰏘",
+            "class<inkscape>": "󰕙",
+            "class<blender>": "󰂫",
+            "class<kdenlive>": "󰄱",
+            "class<obs>": "󰻿",
+
             "class<pavucontrol.*>": "󰕾",
             "class<easyeffects>": "󰸎",
             "class<qalculate.*>": "󰃬",
             "class<nwg-displays>": "󰍹",
+            "class<btop>": "󰨘",
             "class<.*hyprshot.*>": "󰹑",
-            "class<swappy>": "󰹑"
+            "class<swappy>": "󰹑",
+            "class<songrec>": "󰽷"
         },
         "on-click": "activate"
     },
