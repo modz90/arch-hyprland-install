@@ -4,6 +4,50 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
+# --- Helpers ------------------------------------------------------------------
+
+# Install one or more pacman packages, skipping any already installed.
+pkg() {
+  local to_install=()
+  for p in "$@"; do
+    if pacman -Q "$p" &>/dev/null; then
+      echo "    [skip] $p"
+    else
+      to_install+=("$p")
+    fi
+  done
+  [[ ${#to_install[@]} -gt 0 ]] && sudo pacman -S --noconfirm "${to_install[@]}"
+}
+
+# Install one or more AUR packages, skipping any already installed.
+aur() {
+  local to_install=()
+  for p in "$@"; do
+    if pacman -Q "$p" &>/dev/null; then
+      echo "    [skip] $p"
+    else
+      to_install+=("$p")
+    fi
+  done
+  [[ ${#to_install[@]} -gt 0 ]] && yay -S --noconfirm "${to_install[@]}"
+}
+
+# Install a global npm package, skipping if already present.
+npm_pkg() {
+  if npm list -g --depth=0 "$1" &>/dev/null 2>&1; then
+    echo "    [skip] $1"
+  else
+    sudo npm install -g "$1"
+  fi
+}
+
+deploy() {
+  local src="$1" dst="$2"
+  mkdir -p "$(dirname "${dst}")"
+  cp -r "${src}" "${dst}"
+  echo "    ${dst}"
+}
+
 # --- yay (AUR helper) ---------------------------------------------------------
 if ! command -v yay &>/dev/null; then
   echo "==> Installing yay"
@@ -13,14 +57,6 @@ fi
 
 # --- Dotfiles -----------------------------------------------------------------
 echo "==> Deploying dotfiles"
-
-deploy() {
-  local src="$1" dst="$2"
-  mkdir -p "$(dirname "${dst}")"
-  cp -r "${src}" "${dst}"
-  echo "    ${dst}"
-}
-
 deploy "${REPO_DIR}/dotfiles/hypr"       "${HOME}/.config/hypr"
 deploy "${REPO_DIR}/dotfiles/kitty"      "${HOME}/.config/kitty"
 deploy "${REPO_DIR}/dotfiles/waybar"     "${HOME}/.config/waybar"
@@ -36,119 +72,118 @@ deploy "${REPO_DIR}/dotfiles/starship/starship.toml" "${HOME}/.config/starship.t
 
 # --- Apps ---------------------------------------------------------------------
 echo "==> Installing VSCode"
-yay -S --noconfirm visual-studio-code-bin
+aur visual-studio-code-bin
 
 echo "==> Installing Discord"
-yay -S --noconfirm discord
+aur discord
 
 echo "==> Installing Claude CLI"
-# requires Node.js
-sudo pacman -S --noconfirm nodejs npm
-sudo npm install -g @anthropic-ai/claude-code
+pkg nodejs npm
+npm_pkg @anthropic-ai/claude-code
 
 # --- Notifications, lock screen, clipboard, wallpaper, system monitor ---------
 echo "==> Installing mako (notification daemon)"
-sudo pacman -S --noconfirm mako
+pkg mako
 
 echo "==> Installing hyprlock + hypridle (screen lock & idle)"
-yay -S --noconfirm hyprlock hypridle
+aur hyprlock hypridle
 
 echo "==> Installing hyprpaper (wallpaper)"
-yay -S --noconfirm hyprpaper
+aur hyprpaper
 
 echo "==> Installing cliphist + wl-clipboard (clipboard history)"
-sudo pacman -S --noconfirm wl-clipboard
-yay -S --noconfirm cliphist
+pkg wl-clipboard
+aur cliphist
 
 echo "==> Installing btop (system monitor)"
-sudo pacman -S --noconfirm btop
+pkg btop
 
 echo "==> Installing playerctl (media key support)"
-sudo pacman -S --noconfirm playerctl
+pkg playerctl
 
 echo "==> Installing hyprpicker (color picker)"
-yay -S --noconfirm hyprpicker
+aur hyprpicker
 
 # --- Hyprland Extras ----------------------------------------------------------
 echo "==> Installing hyprsunset (color temperature / night mode)"
-yay -S --noconfirm hyprsunset
+aur hyprsunset
 
 # --- System Utilities ---------------------------------------------------------
 echo "==> Installing nwg-displays (monitor config GUI)"
-yay -S --noconfirm nwg-displays
+aur nwg-displays
 
 echo "==> Installing ddcutil (external monitor brightness)"
-sudo pacman -S --noconfirm ddcutil
+pkg ddcutil
 
 echo "==> Installing ydotool (input automation)"
-yay -S --noconfirm ydotool
+aur ydotool
 
 echo "==> Installing jq + yq (JSON/YAML tools)"
-sudo pacman -S --noconfirm jq
-yay -S --noconfirm go-yq
+pkg jq
+aur go-yq
 
 # --- Productivity -------------------------------------------------------------
 echo "==> Installing thunar (file manager)"
-sudo pacman -S --noconfirm thunar thunar-volman gvfs
+pkg thunar thunar-volman gvfs
 
 echo "==> Installing qalculate (calculator)"
-sudo pacman -S --noconfirm qalculate-gtk
+pkg qalculate-gtk
 
 # --- Media & Audio ------------------------------------------------------------
 echo "==> Installing easyeffects (audio effects & EQ)"
-sudo pacman -S --noconfirm easyeffects
+pkg easyeffects
 
 echo "==> Installing pavucontrol-qt (per-app volume mixer)"
-sudo pacman -S --noconfirm pavucontrol-qt
+pkg pavucontrol-qt
 
 echo "==> Installing songrec (music recognition)"
-yay -S --noconfirm songrec
+aur songrec
 
 # --- Screenshot & Recording ---------------------------------------------------
 echo "==> Installing swappy (screenshot annotation)"
-sudo pacman -S --noconfirm swappy
+pkg swappy
 
 echo "==> Installing wf-recorder (screen recording)"
-sudo pacman -S --noconfirm wf-recorder
+pkg wf-recorder
 
 echo "==> Installing grim + slurp (screenshot region selection)"
-sudo pacman -S --noconfirm grim slurp
+pkg grim slurp
 
 echo "==> Installing tesseract + English data (OCR)"
-sudo pacman -S --noconfirm tesseract tesseract-data-eng
+pkg tesseract tesseract-data-eng
 
 # --- Theming ------------------------------------------------------------------
 echo "==> Installing adw-gtk-theme (modern GTK theme)"
-yay -S --noconfirm adw-gtk-theme
+aur adw-gtk-theme
 
 echo "==> Installing Bibata cursor theme"
-yay -S --noconfirm bibata-cursor-theme-bin
+aur bibata-cursor-theme-bin
 
 echo "==> Installing JetBrains Mono Nerd Font"
-sudo pacman -S --noconfirm ttf-jetbrains-mono-nerd
+pkg ttf-jetbrains-mono-nerd
 
 echo "==> Installing Kvantum (Qt theme manager)"
-sudo pacman -S --noconfirm kvantum
+pkg kvantum
 
 echo "==> Installing matugen (Material You wallpaper color generator)"
-yay -S --noconfirm matugen-bin
+aur matugen-bin
 
 # --- Bar & Launcher -----------------------------------------------------------
 echo "==> Installing fuzzel (app launcher)"
-sudo pacman -S --noconfirm fuzzel
+pkg fuzzel
 
 echo "==> Installing cava (audio visualizer)"
-sudo pacman -S --noconfirm cava
+pkg cava
 
 # --- Shell & Terminal ---------------------------------------------------------
 echo "==> Installing fish shell"
-sudo pacman -S --noconfirm fish
+pkg fish
 
 echo "==> Installing zsh"
-sudo pacman -S --noconfirm zsh
+pkg zsh
 
 echo "==> Installing starship prompt"
-sudo pacman -S --noconfirm starship
+pkg starship
 
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."
