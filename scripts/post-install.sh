@@ -62,8 +62,9 @@ deploy "${REPO_DIR}/dotfiles/kitty"      "${HOME}/.config/kitty"
 deploy "${REPO_DIR}/dotfiles/waybar"     "${HOME}/.config/waybar"
 deploy "${REPO_DIR}/dotfiles/wofi"       "${HOME}/.config/wofi"
 deploy "${REPO_DIR}/dotfiles/mako"       "${HOME}/.config/mako"
-deploy "${REPO_DIR}/dotfiles/gtk-3.0"    "${HOME}/.config/gtk-3.0"
-deploy "${REPO_DIR}/dotfiles/gtk-4.0"    "${HOME}/.config/gtk-4.0"
+deploy "${REPO_DIR}/dotfiles/gtk-2.0/gtkrc" "${HOME}/.gtkrc-2.0"
+deploy "${REPO_DIR}/dotfiles/gtk-3.0"       "${HOME}/.config/gtk-3.0"
+deploy "${REPO_DIR}/dotfiles/gtk-4.0"       "${HOME}/.config/gtk-4.0"
 deploy "${REPO_DIR}/dotfiles/fuzzel"     "${HOME}/.config/fuzzel"
 deploy "${REPO_DIR}/dotfiles/cava"       "${HOME}/.config/cava"
 deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
@@ -167,6 +168,9 @@ pkg kvantum
 
 echo "==> Installing matugen (Material You wallpaper color generator)"
 aur matugen-bin
+
+echo "==> Installing Papirus icon theme"
+sudo pacman -S --noconfirm papirus-icon-theme
 
 # --- Bar & Launcher -----------------------------------------------------------
 echo "==> Installing fuzzel (app launcher)"
