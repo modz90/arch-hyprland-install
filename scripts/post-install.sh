@@ -67,6 +67,7 @@ deploy "${REPO_DIR}/dotfiles/cava"       "${HOME}/.config/cava"
 deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
 deploy "${REPO_DIR}/dotfiles/zsh/.zshrc" "${HOME}/.zshrc"
 deploy "${REPO_DIR}/dotfiles/starship/starship.toml" "${HOME}/.config/starship.toml"
+deploy "${REPO_DIR}/dotfiles/nwg-dock"   "${HOME}/.config/nwg-dock"
 
 # --- Apps ---------------------------------------------------------------------
 echo "==> Installing VSCode"
@@ -105,6 +106,9 @@ aur hyprpicker
 # --- Hyprland Extras ----------------------------------------------------------
 echo "==> Installing hyprsunset (color temperature / night mode)"
 aur hyprsunset
+
+echo "==> Installing nwg-dock-hyprland (app dock)"
+aur nwg-dock-hyprland
 
 # --- System Utilities ---------------------------------------------------------
 echo "==> Installing nwg-displays (monitor config GUI)"
