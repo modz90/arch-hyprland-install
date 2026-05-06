@@ -1,29 +1,19 @@
 #!/usr/bin/env bash
 # fetch-anime-wallpaper.sh [--nsfw] [transition] [search terms...]
-# Fetches a random anime wallpaper from Wallhaven and sets it via swww.
+# Fetches a random anime wallpaper and sets it via swww.
 #
-# Purity levels (set WALLHAVEN_API_KEY in ~/.config/hypr/scripts/wallhaven.key
-# or export it from your shell to unlock NSFW):
-#   SFW  (default) — purity=100  (safe only, no key needed)
-#   NSFW (--nsfw)  — purity=110  (safe+sketchy, no key needed)
-#                    purity=111  (all including explicit, key required)
+# Sources:
+#   SFW  (default) — Wallhaven  (anime category, purity=100, no auth needed)
+#   NSFW (--nsfw)  — Rule34.xxx (explicit booru, no auth needed)
 #
 # Examples:
 #   fetch-anime-wallpaper.sh
 #   fetch-anime-wallpaper.sh --nsfw
 #   fetch-anime-wallpaper.sh wipe hatsune miku
-#   fetch-anime-wallpaper.sh --nsfw fade zero two
+#   fetch-anime-wallpaper.sh --nsfw fade zero_two
 #
-# Keybind: Super+Shift+W  (SFW)
+# Keybind: Super+Shift+W       (SFW)
 #          Super+Ctrl+Shift+W  (NSFW)
-
-# ── Parse flags ───────────────────────────────────────────────────────────────
-
-NSFW=false
-if [[ "${1:-}" == "--nsfw" ]]; then
-    NSFW=true
-    shift
-fi
 
 # ── Parse flags ───────────────────────────────────────────────────────────────
 
@@ -37,28 +27,6 @@ TRANSITION="${1:-random}"
 shift 2>/dev/null || true
 EXTRA_QUERY="$*"
 
-# ── API key (optional — only needed for explicit content) ─────────────────────
-
-KEY_FILE="${HOME}/.config/hypr/scripts/wallhaven.key"
-WALLHAVEN_API_KEY="${WALLHAVEN_API_KEY:-}"
-[[ -z "$WALLHAVEN_API_KEY" && -f "$KEY_FILE" ]] && WALLHAVEN_API_KEY=$(cat "$KEY_FILE")
-
-# ── Purity & dirs ─────────────────────────────────────────────────────────────
-
-if $NSFW; then
-    if [[ -n "$WALLHAVEN_API_KEY" ]]; then
-        PURITY="111"   # all including explicit
-    else
-        PURITY="110"   # safe + sketchy (no key needed)
-    fi
-    WALLPAPER_DIR="${HOME}/Pictures/Wallpapers/Wallhaven-NSFW"
-else
-    PURITY="100"
-    WALLPAPER_DIR="${HOME}/Pictures/Wallpapers/Wallhaven"
-fi
-
-mkdir -p "$WALLPAPER_DIR"
-
 # ── Dependency check ──────────────────────────────────────────────────────────
 
 for cmd in curl jq; do
@@ -68,62 +36,88 @@ for cmd in curl jq; do
     fi
 done
 
-# ── Build query ───────────────────────────────────────────────────────────────
+# ── Source config ─────────────────────────────────────────────────────────────
 
-# categories: 010 = anime only
-# atleast: minimum resolution
-# sorting: random gives a different page each request
-PAGE=$(( RANDOM % 10 + 1 ))
-BASE_URL="https://wallhaven.cc/api/v1/search"
-PARAMS="categories=010&purity=${PURITY}&atleast=1920x1080&sorting=random&page=${PAGE}"
+if $NSFW; then
+    SOURCE="Rule34"
+    WALLPAPER_DIR="${HOME}/Pictures/Wallpapers/Rule34"
+    mkdir -p "$WALLPAPER_DIR"
 
-if [[ -n "$EXTRA_QUERY" ]]; then
-    Q=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$EXTRA_QUERY" 2>/dev/null \
-        || echo "$EXTRA_QUERY" | sed 's/ /+/g')
-    PARAMS="${PARAMS}&q=${Q}"
+    # Rule34 API: same Danbooru-style API, returns JSON array
+    # Tags: animated wallpaper-like content, min resolution
+    BASE_TAGS="animated:false score:>20 width:>1280"
+    [[ -n "$EXTRA_QUERY" ]] && TAGS="${BASE_TAGS} ${EXTRA_QUERY}" || TAGS="$BASE_TAGS"
+
+    ENCODED=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$TAGS" 2>/dev/null \
+        || echo "$TAGS" | sed 's/ /+/g; s/:/%3A/g; s/>/%3E/g')
+    PID=$(( RANDOM % 10 ))
+    API="https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=20&tags=${ENCODED}&pid=${PID}"
+
+    get_count()   { echo "$1" | jq 'length' 2>/dev/null; }
+    get_url()     { echo "$1" | jq -r ".[${2}].file_url // empty" 2>/dev/null; }
+    get_id()      { echo "$1" | jq -r ".[${2}].id // empty" 2>/dev/null; }
+
+else
+    SOURCE="Wallhaven"
+    WALLPAPER_DIR="${HOME}/Pictures/Wallpapers/Wallhaven"
+    mkdir -p "$WALLPAPER_DIR"
+
+    PAGE=$(( RANDOM % 10 + 1 ))
+    PARAMS="categories=010&purity=100&atleast=1920x1080&sorting=random&page=${PAGE}"
+    if [[ -n "$EXTRA_QUERY" ]]; then
+        Q=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$EXTRA_QUERY" 2>/dev/null \
+            || echo "$EXTRA_QUERY" | sed 's/ /+/g')
+        PARAMS="${PARAMS}&q=${Q}"
+    fi
+    API="https://wallhaven.cc/api/v1/search?${PARAMS}"
+
+    get_count()   { echo "$1" | jq '.data | length' 2>/dev/null; }
+    get_url()     { echo "$1" | jq -r ".data[${2}].path // empty" 2>/dev/null; }
+    get_id()      { echo "$1" | jq -r ".data[${2}].id // empty" 2>/dev/null; }
 fi
-
-[[ -n "$WALLHAVEN_API_KEY" ]] && PARAMS="${PARAMS}&apikey=${WALLHAVEN_API_KEY}"
-
-API="${BASE_URL}?${PARAMS}"
 
 # ── Fetch ─────────────────────────────────────────────────────────────────────
 
-notify-send "Wallpaper" "Fetching from Wallhaven…" --icon=image-x-generic 2>/dev/null || true
+notify-send "Wallpaper" "Fetching from ${SOURCE}…" --icon=image-x-generic 2>/dev/null || true
 
-json=$(curl -s --max-time 15 "$API") || {
-    notify-send "Wallpaper" "Network error — check your connection" 2>/dev/null
+json=$(curl -s --max-time 15 -A "Mozilla/5.0" "$API") || {
+    notify-send "Wallpaper" "Network error" 2>/dev/null
     exit 1
 }
 
-count=$(echo "$json" | jq '.data | length' 2>/dev/null)
+count=$(get_count "$json")
 if [[ -z "$count" || "$count" == "0" || "$count" == "null" ]]; then
-    notify-send "Wallpaper" "No results from Wallhaven" 2>/dev/null
-    echo "No results. Raw response:"
-    echo "$json" | head -5
+    notify-send "Wallpaper" "No results from ${SOURCE}" 2>/dev/null
+    echo "No results. Raw: $(echo "$json" | head -3)"
     exit 1
 fi
 
 idx=$(( RANDOM % count ))
-file_url=$(echo "$json" | jq -r ".data[${idx}].path")
-post_id=$(echo  "$json" | jq -r ".data[${idx}].id")
+file_url=$(get_url "$json" "$idx")
+post_id=$(get_id  "$json" "$idx")
 
 if [[ -z "$file_url" || "$file_url" == "null" ]]; then
-    notify-send "Wallpaper" "Could not parse Wallhaven response" 2>/dev/null
+    notify-send "Wallpaper" "Could not parse ${SOURCE} response" 2>/dev/null
     exit 1
 fi
 
 # ── Download ──────────────────────────────────────────────────────────────────
 
-ext="${file_url##*.}"
+ext="${file_url##*.}"; ext="${ext%%\?*}"
 [[ -z "$ext" || ${#ext} -gt 4 ]] && ext="jpg"
-DEST="${WALLPAPER_DIR}/wallhaven_${post_id}.${ext}"
+# Skip videos/gifs
+[[ "$ext" == "mp4" || "$ext" == "webm" || "$ext" == "gif" ]] && {
+    notify-send "Wallpaper" "Skipped video/gif — try again" 2>/dev/null
+    exit 1
+}
+
+DEST="${WALLPAPER_DIR}/${SOURCE,,}_${post_id}.${ext}"
 
 if [[ -f "$DEST" ]]; then
     echo "Already cached: $DEST"
 else
-    echo "Downloading wallhaven-${post_id}…"
-    curl -s -L --max-time 60 "$file_url" -o "$DEST" || {
+    echo "Downloading ${SOURCE} #${post_id}…"
+    curl -s -L --max-time 60 -A "Mozilla/5.0" "$file_url" -o "$DEST" || {
         notify-send "Wallpaper" "Download failed" 2>/dev/null
         rm -f "$DEST"
         exit 1

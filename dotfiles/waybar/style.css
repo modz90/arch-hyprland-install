@@ -80,6 +80,20 @@ window#waybar {
 #pulseaudio.muted      { color: var(--inactive); }
 #network.disconnected  { color: var(--inactive); }
 
+/* ── Notification bell ───────────────────────────────────────────────────────*/
+#custom-swaync {
+    color: var(--text);
+}
+
+#custom-swaync.notification {
+    color: var(--accent);
+}
+
+#custom-swaync.dnd-notification,
+#custom-swaync.dnd-none {
+    color: var(--inactive);
+}
+
 /* ── Tray ────────────────────────────────────────────────────────────────────*/
 #tray {
     padding: 3px 10px;

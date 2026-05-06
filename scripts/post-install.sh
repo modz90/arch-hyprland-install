@@ -68,6 +68,7 @@ deploy "${REPO_DIR}/dotfiles/fish"       "${HOME}/.config/fish"
 deploy "${REPO_DIR}/dotfiles/zsh/.zshrc" "${HOME}/.zshrc"
 deploy "${REPO_DIR}/dotfiles/starship/starship.toml" "${HOME}/.config/starship.toml"
 deploy "${REPO_DIR}/dotfiles/nwg-dock"   "${HOME}/.config/nwg-dock"
+deploy "${REPO_DIR}/dotfiles/swaync"    "${HOME}/.config/swaync"
 
 # --- Apps ---------------------------------------------------------------------
 echo "==> Installing VSCode"
@@ -109,6 +110,21 @@ aur hyprsunset
 
 echo "==> Installing nwg-dock-hyprland (app dock)"
 aur nwg-dock-hyprland
+
+echo "==> Installing swaync (notification center)"
+aur swaync
+
+echo "==> Installing swayosd (volume/brightness OSD)"
+aur swayosd
+
+echo "==> Setting up hyprexpo overview plugin via hyprpm"
+if command -v hyprpm &>/dev/null; then
+    hyprpm update
+    hyprpm add https://github.com/hyprwm/hyprland-plugins 2>/dev/null || true
+    hyprpm enable hyprexpo 2>/dev/null || true
+else
+    echo "  [skip] hyprpm not found — install hyprland-git for plugin support"
+fi
 
 # --- System Utilities ---------------------------------------------------------
 echo "==> Installing nwg-displays (monitor config GUI)"
