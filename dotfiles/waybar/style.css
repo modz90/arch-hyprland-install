@@ -1,3 +1,5 @@
+@import "colors.css";
+
 * {
     font-family: "JetBrains Mono", monospace;
     font-size: 12px;
@@ -7,30 +9,35 @@
 }
 
 window#waybar {
-    background: rgba(46, 52, 64, 0.92);
-    color: #D8DEE9;
+    background: var(--bg);
+    color: var(--text);
 }
 
 #workspaces button {
     padding: 0 8px;
-    color: #81A1C1;
+    color: var(--inactive);
 }
 
 #workspaces button.active {
-    color: #88C0D0;
-    border-bottom: 2px solid #88C0D0;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+}
+
+#workspaces button:hover {
+    background: var(--hover-bg);
+    color: var(--text);
 }
 
 #clock, #pulseaudio, #battery, #network, #tray,
 #cpu, #memory, #disk {
     padding: 0 10px;
-    color: #D8DEE9;
+    color: var(--text);
 }
 
-#cpu.warning    { color: #EBCB8B; }
-#cpu.critical   { color: #BF616A; }
-#memory.warning { color: #EBCB8B; }
-#memory.critical { color: #BF616A; }
+#cpu.warning,
+#memory.warning,
+#battery.warning { color: var(--warning); }
 
-#battery.warning { color: #EBCB8B; }
-#battery.critical { color: #BF616A; }
+#cpu.critical,
+#memory.critical,
+#battery.critical { color: var(--critical); }

@@ -1,0 +1,13 @@
+/* Nord (default) — overwritten by theme-switcher.sh */
+* {
+    --bg:        rgba(46, 52, 64, 0.92);
+    --accent:    #88C0D0;
+    --accent2:   #5E81AC;
+    --text:      #D8DEE9;
+    --inactive:  #4C566A;
+    --border:    rgba(76, 86, 106, 0.4);
+    --active-bg: rgba(136, 192, 208, 0.15);
+    --hover-bg:  rgba(216, 222, 233, 0.08);
+    --warning:   #EBCB8B;
+    --critical:  #BF616A;
+}
