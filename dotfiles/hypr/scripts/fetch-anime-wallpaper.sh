@@ -25,6 +25,14 @@ if [[ "${1:-}" == "--nsfw" ]]; then
     shift
 fi
 
+# ── Parse flags ───────────────────────────────────────────────────────────────
+
+NSFW=false
+if [[ "${1:-}" == "--nsfw" ]]; then
+    NSFW=true
+    shift
+fi
+
 TRANSITION="${1:-random}"
 shift 2>/dev/null || true
 EXTRA_QUERY="$*"
