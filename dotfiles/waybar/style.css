@@ -1,3 +1,5 @@
+@import "colors.css";
+
 * {
     font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
     font-size: 12px;
@@ -10,7 +12,7 @@
 
 window#waybar {
     background: transparent;
-    color: #D8DEE9;
+    color: var(--text);
 }
 
 /* ── Pill base ───────────────────────────────────────────────────────────────*/
@@ -23,19 +25,19 @@ window#waybar {
 #network,
 #battery,
 #tray {
-    background: rgba(46, 52, 64, 0.88);
+    background: var(--bg);
     border-radius: 20px;
     padding: 3px 12px;
     margin: 6px 3px;
-    color: #D8DEE9;
-    border: 1px solid rgba(76, 86, 106, 0.4);
+    color: var(--text);
+    border: 1px solid var(--border);
 }
 
 /* ── Launcher ────────────────────────────────────────────────────────────────*/
 #custom-launcher {
     font-size: 15px;
     padding: 3px 14px;
-    color: #88C0D0;
+    color: var(--accent);
 }
 
 /* ── Workspaces ──────────────────────────────────────────────────────────────*/
@@ -45,20 +47,20 @@ window#waybar {
 
 #workspaces button {
     background: transparent;
-    color: #4C566A;
+    color: var(--inactive);
     padding: 0 6px;
     border-radius: 20px;
     min-width: 18px;
 }
 
 #workspaces button.active {
-    color: #88C0D0;
-    background: rgba(136, 192, 208, 0.15);
+    color: var(--accent);
+    background: var(--active-bg);
 }
 
 #workspaces button:hover {
-    background: rgba(216, 222, 233, 0.08);
-    color: #D8DEE9;
+    background: var(--hover-bg);
+    color: var(--text);
 }
 
 #workspaces button .app-icon {
@@ -72,12 +74,11 @@ window#waybar {
 }
 
 /* ── Status pills ────────────────────────────────────────────────────────────*/
-#battery.warning  { color: #EBCB8B; }
-#battery.critical { color: #BF616A; }
+#battery.warning  { color: var(--warning); }
+#battery.critical { color: var(--critical); }
 
-#pulseaudio.muted { color: #4C566A; }
-
-#network.disconnected { color: #4C566A; }
+#pulseaudio.muted      { color: var(--inactive); }
+#network.disconnected  { color: var(--inactive); }
 
 /* ── Tray ────────────────────────────────────────────────────────────────────*/
 #tray {

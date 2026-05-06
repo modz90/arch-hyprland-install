@@ -6,7 +6,6 @@ REPO_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 # --- Helpers ------------------------------------------------------------------
 
-# Install one or more pacman packages, skipping any already installed.
 pkg() {
   local to_install=()
   for p in "$@"; do
@@ -19,7 +18,6 @@ pkg() {
   [[ ${#to_install[@]} -gt 0 ]] && sudo pacman -S --noconfirm "${to_install[@]}"
 }
 
-# Install one or more AUR packages, skipping any already installed.
 aur() {
   local to_install=()
   for p in "$@"; do
@@ -32,7 +30,6 @@ aur() {
   [[ ${#to_install[@]} -gt 0 ]] && yay -S --noconfirm "${to_install[@]}"
 }
 
-# Install a global npm package, skipping if already present.
 npm_pkg() {
   if npm list -g --depth=0 "$1" &>/dev/null 2>&1; then
     echo "    [skip] $1"
@@ -89,8 +86,8 @@ pkg mako
 echo "==> Installing hyprlock + hypridle (screen lock & idle)"
 aur hyprlock hypridle
 
-echo "==> Installing hyprpaper (wallpaper)"
-aur hyprpaper
+echo "==> Installing swww (animated wallpaper daemon)"
+pkg swww
 
 echo "==> Installing cliphist + wl-clipboard (clipboard history)"
 pkg wl-clipboard
@@ -170,7 +167,7 @@ echo "==> Installing matugen (Material You wallpaper color generator)"
 aur matugen-bin
 
 echo "==> Installing Papirus icon theme"
-sudo pacman -S --noconfirm papirus-icon-theme
+pkg papirus-icon-theme
 
 # --- Bar & Launcher -----------------------------------------------------------
 echo "==> Installing fuzzel (app launcher)"
