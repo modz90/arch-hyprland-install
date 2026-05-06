@@ -14,6 +14,7 @@ apply_nord() {
     INACTIVE=4C566A; WARNING=EBCB8B; CRITICAL=BF616A
     C0=3B4252; C1=BF616A; C2=A3BE8C; C3=EBCB8B
     C4=81A1C1; C5=B48EAD; C6=88C0D0; C7=E5E9F0
+    WALLPAPER_TAGS="scenery+snow+winter+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_dracula() {
@@ -21,6 +22,7 @@ apply_dracula() {
     INACTIVE=6272A4; WARNING=F1FA8C; CRITICAL=FF5555
     C0=44475A; C1=FF5555; C2=50FA7B; C3=F1FA8C
     C4=BD93F9; C5=FF79C6; C6=8BE9FD; C7=F8F8F2
+    WALLPAPER_TAGS="scenery+night+purple+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_catppuccin() {
@@ -28,6 +30,7 @@ apply_catppuccin() {
     INACTIVE=6C7086; WARNING=F9E2AF; CRITICAL=F38BA8
     C0=45475A; C1=F38BA8; C2=A6E3A1; C3=F9E2AF
     C4=89B4FA; C5=F5C2E7; C6=94E2D5; C7=BAC2DE
+    WALLPAPER_TAGS="scenery+soft+pastel+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_gruvbox() {
@@ -35,6 +38,7 @@ apply_gruvbox() {
     INACTIVE=928374; WARNING=FABD2F; CRITICAL=CC241D
     C0=3C3836; C1=CC241D; C2=98971A; C3=D79921
     C4=458588; C5=B16286; C6=689D6A; C7=A89984
+    WALLPAPER_TAGS="scenery+autumn+forest+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_tokyo_night() {
@@ -42,6 +46,7 @@ apply_tokyo_night() {
     INACTIVE=565F89; WARNING=E0AF68; CRITICAL=F7768E
     C0=414868; C1=F7768E; C2=9ECE6A; C3=E0AF68
     C4=7AA2F7; C5=BB9AF7; C6=7DCFFF; C7=A9B1D6
+    WALLPAPER_TAGS="city+night+scenery+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 # ── Anime themes ───────────────────────────────────────────────────────────────
@@ -52,6 +57,7 @@ apply_sakura() {
     INACTIVE=6B3F5A; WARNING=F4C98E; CRITICAL=E05C7A
     C0=2D1B2E; C1=E05C7A; C2=88C9A8; C3=F4C98E
     C4=B8A0D4; C5=F4A7B9; C6=A0C4D4; C7=F0D6E8
+    WALLPAPER_TAGS="cherry_blossoms+scenery+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_evangelion() {
@@ -60,6 +66,7 @@ apply_evangelion() {
     INACTIVE=3D2B4A; WARNING=FFD700; CRITICAL=CC2936
     C0=1A1A2E; C1=CC2936; C2=4CAF50; C3=FFD700
     C4=7B68EE; C5=FF6B00; C6=00BCD4; C7=E8E8E8
+    WALLPAPER_TAGS="neon_genesis_evangelion+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_miku() {
@@ -68,6 +75,7 @@ apply_miku() {
     INACTIVE=2A5A57; WARNING=F9E784; CRITICAL=FF6B9D
     C0=1A3040; C1=FF6B9D; C2=39C5BB; C3=F9E784
     C4=6BA3BE; C5=B09FCA; C6=39C5BB; C7=D4F1F0
+    WALLPAPER_TAGS="hatsune_miku+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_zero_two() {
@@ -76,6 +84,7 @@ apply_zero_two() {
     INACTIVE=6B2A35; WARNING=FFB347; CRITICAL=FF1744
     C0=2D1216; C1=FF1744; C2=7CB87A; C3=FFB347
     C4=B06090; C5=FF4D6D; C6=E08090; C7=FFE8EC
+    WALLPAPER_TAGS="zero_two+darling_in_the_franxx+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_lain() {
@@ -84,6 +93,7 @@ apply_lain() {
     INACTIVE=1E4A28; WARNING=CCFF00; CRITICAL=FF3333
     C0=1A2A1A; C1=FF3333; C2=00FF41; C3=CCFF00
     C4=00AAFF; C5=CC88FF; C6=00FF41; C7=C8FFD4
+    WALLPAPER_TAGS="serial_experiments_lain+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 apply_rem() {
@@ -92,6 +102,7 @@ apply_rem() {
     INACTIVE=2A3F6B; WARNING=FFD166; CRITICAL=EF476F
     C0=1A2440; C1=EF476F; C2=06D6A0; C3=FFD166
     C4=7BA7FF; C5=A78BFA; C6=7DCFFF; C7=D0E4FF
+    WALLPAPER_TAGS="rem+re:zero+rating%3As+score%3A%3E30+width%3A%3E1280"
 }
 
 # ── Dynamic: generate from current wallpaper via matugen ───────────────────────
@@ -144,6 +155,7 @@ apply_from_wallpaper() {
         echo "Raw matugen output:"; echo "$json" | head -20
         exit 1
     fi
+    WALLPAPER_TAGS=""  # wallpaper is already set — skip fetch
 }
 
 # ── Pick theme ─────────────────────────────────────────────────────────────────
@@ -257,6 +269,42 @@ disown
 kitty @ --to unix:/tmp/kitty-socket set-colors --all "$KITTY_THEME" 2>/dev/null \
     || kitty @ set-colors --all "$KITTY_THEME" 2>/dev/null \
     || true
+
+# ── Fetch matching wallpaper from Konachan ────────────────────────────────────
+
+if [[ -n "$WALLPAPER_TAGS" ]] && command -v curl &>/dev/null && command -v jq &>/dev/null; then
+    (
+        WALLPAPER_DIR="${HOME}/Pictures/Wallpapers/Themes"
+        mkdir -p "$WALLPAPER_DIR"
+
+        API="https://konachan.net/post.json?limit=20&tags=${WALLPAPER_TAGS}&random=true"
+        json=$(curl -s --max-time 15 "$API") || { echo "Wallpaper fetch failed"; exit 0; }
+
+        count=$(echo "$json" | jq 'length' 2>/dev/null)
+        if [[ -z "$count" || "$count" == "0" ]]; then
+            echo "No wallpaper results for theme tags"
+            exit 0
+        fi
+
+        # Pick a random entry from the batch to avoid always getting the same image
+        idx=$(( RANDOM % count ))
+        file_url=$(echo "$json" | jq -r ".[${idx}].file_url // .[${idx}].sample_url")
+        post_id=$(echo  "$json" | jq -r ".[${idx}].id")
+
+        [[ -z "$file_url" || "$file_url" == "null" ]] && exit 0
+
+        ext="${file_url##*.}"; ext="${ext%%\?*}"
+        [[ -z "$ext" || ${#ext} -gt 4 ]] && ext="jpg"
+        DEST="${WALLPAPER_DIR}/theme_${post_id}.${ext}"
+
+        if [[ ! -f "$DEST" ]]; then
+            curl -s -L --max-time 60 "$file_url" -o "$DEST" || { rm -f "$DEST"; exit 0; }
+        fi
+
+        ~/.config/hypr/scripts/set-wallpaper.sh "$DEST" "fade" 2>/dev/null || true
+    ) &
+    disown
+fi
 
 notify-send "Theme switched" "$CHOICE" --icon=preferences-desktop-theme-global 2>/dev/null || true
 echo "✓ Theme applied: $CHOICE"
