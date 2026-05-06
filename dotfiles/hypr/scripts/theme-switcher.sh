@@ -5,10 +5,10 @@
 
 WAYBAR_COLORS="${HOME}/.config/waybar/colors.css"
 KITTY_THEME="${HOME}/.config/kitty/theme.conf"
+HYPR_COLORS="${HOME}/.config/hypr/conf.d/colors.conf"
 
-# ── Theme definitions ──────────────────────────────────────────────────────────
-# Fields: BG ACCENT ACCENT2 TEXT INACTIVE WARNING CRITICAL
-#         C0 C1 C2 C3 C4 C5 C6 C7 (terminal palette base colors)
+# ── Preset themes ──────────────────────────────────────────────────────────────
+
 apply_nord() {
     BG=2E3440; ACCENT=88C0D0; ACCENT2=5E81AC; TEXT=D8DEE9
     INACTIVE=4C566A; WARNING=EBCB8B; CRITICAL=BF616A
@@ -44,24 +44,136 @@ apply_tokyo_night() {
     C4=7AA2F7; C5=BB9AF7; C6=7DCFFF; C7=A9B1D6
 }
 
+# ── Anime themes ───────────────────────────────────────────────────────────────
+
+apply_sakura() {
+    # Cherry blossom — soft pinks and plum
+    BG=1A1020; ACCENT=F4A7B9; ACCENT2=C97FA0; TEXT=F8E8EE
+    INACTIVE=6B3F5A; WARNING=F4C98E; CRITICAL=E05C7A
+    C0=2D1B2E; C1=E05C7A; C2=88C9A8; C3=F4C98E
+    C4=B8A0D4; C5=F4A7B9; C6=A0C4D4; C7=F0D6E8
+}
+
+apply_evangelion() {
+    # NERV — near-black navy with orange and blood red
+    BG=0D0E1A; ACCENT=FF6B00; ACCENT2=CC2936; TEXT=E8E8E8
+    INACTIVE=3D2B4A; WARNING=FFD700; CRITICAL=CC2936
+    C0=1A1A2E; C1=CC2936; C2=4CAF50; C3=FFD700
+    C4=7B68EE; C5=FF6B00; C6=00BCD4; C7=E8E8E8
+}
+
+apply_miku() {
+    # Hatsune Miku — dark navy with iconic teal
+    BG=0A1628; ACCENT=39C5BB; ACCENT2=1B7C78; TEXT=D4F1F0
+    INACTIVE=2A5A57; WARNING=F9E784; CRITICAL=FF6B9D
+    C0=1A3040; C1=FF6B9D; C2=39C5BB; C3=F9E784
+    C4=6BA3BE; C5=B09FCA; C6=39C5BB; C7=D4F1F0
+}
+
+apply_zero_two() {
+    # Darling in the FranXX — deep maroon with hot pink
+    BG=1A0D0D; ACCENT=FF4D6D; ACCENT2=C8374F; TEXT=FFE8EC
+    INACTIVE=6B2A35; WARNING=FFB347; CRITICAL=FF1744
+    C0=2D1216; C1=FF1744; C2=7CB87A; C3=FFB347
+    C4=B06090; C5=FF4D6D; C6=E08090; C7=FFE8EC
+}
+
+apply_lain() {
+    # Serial Experiments Lain — pitch black with matrix green
+    BG=0D1117; ACCENT=00FF41; ACCENT2=00CC33; TEXT=C8FFD4
+    INACTIVE=1E4A28; WARNING=CCFF00; CRITICAL=FF3333
+    C0=1A2A1A; C1=FF3333; C2=00FF41; C3=CCFF00
+    C4=00AAFF; C5=CC88FF; C6=00FF41; C7=C8FFD4
+}
+
+apply_rem() {
+    # Re:Zero — dark navy with soft periwinkle blue
+    BG=0A0F1E; ACCENT=7BA7FF; ACCENT2=4A7FE0; TEXT=D0E4FF
+    INACTIVE=2A3F6B; WARNING=FFD166; CRITICAL=EF476F
+    C0=1A2440; C1=EF476F; C2=06D6A0; C3=FFD166
+    C4=7BA7FF; C5=A78BFA; C6=7DCFFF; C7=D0E4FF
+}
+
+# ── Dynamic: generate from current wallpaper via matugen ───────────────────────
+
+apply_from_wallpaper() {
+    local wall="${HOME}/.config/hypr/wallpaper.jpg"
+    if [[ ! -f "$wall" ]]; then
+        notify-send "Theme" "No wallpaper set. Run set-wallpaper.sh first." 2>/dev/null
+        echo "No wallpaper symlink at ~/.config/hypr/wallpaper.jpg"
+        exit 1
+    fi
+    if ! command -v matugen &>/dev/null; then
+        notify-send "Theme" "matugen not installed (aur: matugen-bin)" 2>/dev/null
+        exit 1
+    fi
+    if ! command -v jq &>/dev/null; then
+        notify-send "Theme" "jq not installed (pacman: jq)" 2>/dev/null
+        exit 1
+    fi
+
+    echo "Generating colors from wallpaper…"
+    local json
+    # matugen accepts --json flag to output colors as JSON instead of writing templates
+    json=$(matugen image "$wall" --json 2>/dev/null) \
+        || json=$(matugen --json image "$wall" 2>/dev/null) \
+        || { notify-send "Theme" "matugen failed"; exit 1; }
+
+    # matugen JSON structure: { "colors": { "dark": { "primary": "#hex", ... } } }
+    pick() { echo "$json" | jq -r ".colors.dark.${1}.hex // .colors.${1}.hex // empty" 2>/dev/null | head -1 | tr -d '#'; }
+
+    BG=$(pick "surface_dim");       [[ -z "$BG" ]]      && BG=$(pick "background")
+    ACCENT=$(pick "primary")
+    ACCENT2=$(pick "tertiary")
+    TEXT=$(pick "on_background")
+    INACTIVE=$(pick "outline")
+    WARNING=$(pick "secondary")
+    CRITICAL=$(pick "error")
+    C0=$(pick "surface_variant")
+    C1=$(pick "error")
+    C2=$(pick "tertiary")
+    C3=$(pick "secondary")
+    C4=$(pick "primary")
+    C5=$(pick "tertiary_container")
+    C6=$(pick "primary_container")
+    C7=$(pick "on_surface")
+
+    # Sanity check — if matugen JSON structure was different, bail with message
+    if [[ -z "$BG" || -z "$ACCENT" ]]; then
+        notify-send "Theme" "Could not parse matugen output. Is matugen-bin up to date?" 2>/dev/null
+        echo "Raw matugen output:"; echo "$json" | head -20
+        exit 1
+    fi
+}
+
 # ── Pick theme ─────────────────────────────────────────────────────────────────
+
 CHOICE="${1:-}"
 if [[ -z "$CHOICE" ]]; then
-    CHOICE=$(printf 'Nord\nDracula\nCatppuccin Mocha\nGruvbox\nTokyo Night' \
-        | fuzzel --dmenu --prompt=" Theme: " --width=22 --lines=5)
+    CHOICE=$(printf \
+        'Nord\nDracula\nCatppuccin Mocha\nGruvbox\nTokyo Night\nSakura\nEvangelion\nMiku\nZero Two\nLain\nRem\nFrom Wallpaper' \
+        | fuzzel --dmenu --prompt=" Theme: " --width=22 --lines=12)
 fi
 [[ -z "$CHOICE" ]] && exit 0
 
 case "$CHOICE" in
-    Nord)            apply_nord ;;
-    Dracula)         apply_dracula ;;
+    Nord)               apply_nord ;;
+    Dracula)            apply_dracula ;;
     "Catppuccin Mocha") apply_catppuccin ;;
-    Gruvbox)         apply_gruvbox ;;
-    "Tokyo Night")   apply_tokyo_night ;;
+    Gruvbox)            apply_gruvbox ;;
+    "Tokyo Night")      apply_tokyo_night ;;
+    Sakura)             apply_sakura ;;
+    Evangelion)         apply_evangelion ;;
+    Miku)               apply_miku ;;
+    "Zero Two")         apply_zero_two ;;
+    Lain)               apply_lain ;;
+    Rem)                apply_rem ;;
+    "From Wallpaper")   apply_from_wallpaper ;;
     *) echo "Unknown theme: $CHOICE"; exit 1 ;;
 esac
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
+
 h2r() { printf '%d,%d,%d' "0x${1:0:2}" "0x${1:2:2}" "0x${1:4:2}"; }
 
 BG_RGB=$(h2r "$BG")
@@ -70,6 +182,7 @@ INACTIVE_RGB=$(h2r "$INACTIVE")
 TEXT_RGB=$(h2r "$TEXT")
 
 # ── Waybar colors.css ──────────────────────────────────────────────────────────
+
 cat > "$WAYBAR_COLORS" <<EOF
 /* ${CHOICE} */
 * {
@@ -87,6 +200,7 @@ cat > "$WAYBAR_COLORS" <<EOF
 EOF
 
 # ── Kitty theme.conf ───────────────────────────────────────────────────────────
+
 cat > "$KITTY_THEME" <<EOF
 # ${CHOICE}
 foreground           #${TEXT}
@@ -111,18 +225,20 @@ color14 #${C6}
 color7  #${C7}
 color15 #${TEXT}
 
-url_color             #${ACCENT}
-active_tab_foreground #${BG}
-active_tab_background #${ACCENT}
+url_color               #${ACCENT}
+active_tab_foreground   #${BG}
+active_tab_background   #${ACCENT}
 inactive_tab_foreground #${INACTIVE}
 inactive_tab_background #${BG}
 EOF
 
 # ── Hyprland borders (live + persistent) ──────────────────────────────────────
+
 hyprctl keyword general:col.active_border "rgba(${ACCENT}ff) rgba(${ACCENT2}ff) 45deg" 2>/dev/null
 hyprctl keyword general:col.inactive_border "rgba(${INACTIVE}ff)" 2>/dev/null
 
-cat > "${HOME}/.config/hypr/conf.d/colors.conf" <<EOF
+cat > "$HYPR_COLORS" <<EOF
+# ${CHOICE}
 general {
     col.active_border = rgba(${ACCENT}ff) rgba(${ACCENT2}ff) 45deg
     col.inactive_border = rgba(${INACTIVE}ff)
@@ -130,9 +246,11 @@ general {
 EOF
 
 # ── Reload Waybar CSS (SIGUSR2 = CSS-only reload, no restart needed) ───────────
+
 pkill -USR2 waybar 2>/dev/null || true
 
 # ── Reload Kitty colors in all running instances ───────────────────────────────
+
 kitty @ set-colors --all "$KITTY_THEME" 2>/dev/null || true
 
 notify-send "Theme switched" "$CHOICE" --icon=preferences-desktop-theme-global 2>/dev/null || true
