@@ -245,13 +245,18 @@ general {
 }
 EOF
 
-# ── Reload Waybar CSS (SIGUSR2 = CSS-only reload, no restart needed) ───────────
+# ── Reload Waybar (kill + restart is most reliable across distros) ────────────
 
-pkill -USR2 waybar 2>/dev/null || true
+pkill waybar 2>/dev/null || true
+sleep 0.3
+waybar &>/dev/null &
+disown
 
-# ── Reload Kitty colors in all running instances ───────────────────────────────
+# ── Reload Kitty colors in all running instances ──────────────────────────────
 
-kitty @ set-colors --all "$KITTY_THEME" 2>/dev/null || true
+kitty @ --to unix:/tmp/kitty-socket set-colors --all "$KITTY_THEME" 2>/dev/null \
+    || kitty @ set-colors --all "$KITTY_THEME" 2>/dev/null \
+    || true
 
 notify-send "Theme switched" "$CHOICE" --icon=preferences-desktop-theme-global 2>/dev/null || true
 echo "✓ Theme applied: $CHOICE"
