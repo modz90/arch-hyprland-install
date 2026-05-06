@@ -1,0 +1,193 @@
+* {
+    all: unset;
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 13px;
+    transition: 150ms ease;
+}
+
+/* ── Notification popup ───────────────────────────────────────────────────── */
+
+.notification-row {
+    outline: none;
+    margin: 4px 8px;
+}
+
+.notification {
+    background: rgba(30, 30, 46, 0.95);
+    border: 1px solid rgba(108, 112, 134, 0.35);
+    border-radius: 14px;
+    padding: 12px;
+    color: #CDD6F4;
+    margin: 0;
+}
+
+.notification.critical {
+    border-color: rgba(243, 139, 168, 0.6);
+}
+
+.notification-content {
+    background: transparent;
+    padding: 4px 0 0 0;
+}
+
+.notification-default-action {
+    border-radius: 10px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+}
+
+.notification-default-action:hover {
+    background: rgba(203, 166, 247, 0.08);
+}
+
+.notification-action {
+    background: rgba(69, 71, 90, 0.5);
+    border-radius: 8px;
+    margin: 6px 2px 0 2px;
+    padding: 4px 10px;
+    color: #CDD6F4;
+}
+
+.notification-action:hover {
+    background: rgba(203, 166, 247, 0.2);
+}
+
+.close-button {
+    background: rgba(243, 139, 168, 0.12);
+    color: #F38BA8;
+    border-radius: 6px;
+    min-width: 22px;
+    min-height: 22px;
+    margin: 0 0 0 6px;
+}
+
+.close-button:hover {
+    background: rgba(243, 139, 168, 0.28);
+}
+
+.summary {
+    font-weight: bold;
+    font-size: 13px;
+    color: #CDD6F4;
+}
+
+.time {
+    font-size: 11px;
+    color: #6C7086;
+}
+
+.body {
+    font-size: 12px;
+    color: #BAC2DE;
+}
+
+.app-name {
+    font-size: 11px;
+    color: #6C7086;
+}
+
+/* ── Control center panel ─────────────────────────────────────────────────── */
+
+.control-center {
+    background: rgba(24, 24, 37, 0.97);
+    border-radius: 18px;
+    border: 1px solid rgba(108, 112, 134, 0.3);
+    padding: 10px 6px;
+    color: #CDD6F4;
+}
+
+.control-center-list {
+    background: transparent;
+}
+
+.control-center-list-placeholder {
+    color: #6C7086;
+    font-size: 12px;
+}
+
+/* ── Widgets ──────────────────────────────────────────────────────────────── */
+
+.widget-title {
+    margin: 6px 8px 4px 8px;
+    color: #CDD6F4;
+}
+
+.widget-title > label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.widget-title > button {
+    background: rgba(108, 112, 134, 0.18);
+    border-radius: 8px;
+    padding: 3px 10px;
+    color: #6C7086;
+    font-size: 12px;
+}
+
+.widget-title > button:hover {
+    background: rgba(243, 139, 168, 0.15);
+    color: #F38BA8;
+}
+
+.widget-dnd {
+    margin: 4px 8px;
+}
+
+.widget-dnd > label {
+    color: #CDD6F4;
+    font-size: 13px;
+}
+
+.widget-dnd > switch {
+    border-radius: 12px;
+    background: rgba(69, 71, 90, 0.8);
+    min-width: 44px;
+    min-height: 22px;
+}
+
+.widget-dnd > switch:checked {
+    background: rgba(203, 166, 247, 0.55);
+}
+
+.widget-dnd > switch slider {
+    background: #CDD6F4;
+    border-radius: 10px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+/* mpris widget */
+.widget-mpris {
+    background: rgba(40, 40, 60, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(108, 112, 134, 0.2);
+    margin: 4px 8px;
+    padding: 8px;
+    color: #CDD6F4;
+}
+
+.widget-mpris-album-art {
+    border-radius: 10px;
+}
+
+.widget-mpris-player {
+    padding: 4px;
+}
+
+.widget-mpris-title {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.widget-mpris-subtitle {
+    font-size: 11px;
+    color: #BAC2DE;
+}
+
+/* ── Blank overlay behind panel ──────────────────────────────────────────── */
+
+.blank-window {
+    background: transparent;
+}
