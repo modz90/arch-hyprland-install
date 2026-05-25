@@ -20,16 +20,21 @@ fi
 
 WALLPAPER="$(realpath "$WALLPAPER")"
 
-# Make sure swww-daemon is running
-if ! pgrep -x swww-daemon &>/dev/null; then
-    swww-daemon &
+# Make sure awww-daemon is running
+if ! pgrep -x awww-daemon &>/dev/null; then
+    awww-daemon &
     sleep 0.5
 fi
 
-swww img "$WALLPAPER" \
-    --transition-type "$TRANSITION" \
-    --transition-duration 1.5 \
-    --transition-fps 60
+# Set wallpaper on every connected monitor explicitly so each gets resized correctly
+while IFS= read -r output; do
+    awww img "$WALLPAPER" \
+        --outputs "$output" \
+        --transition-type "$TRANSITION" \
+        --transition-duration 1.5 \
+        --transition-fps 60 \
+        --resize crop
+done < <(hyprctl monitors -j 2>/dev/null | jq -r '.[].name')
 
 # Keep a symlink so startup.conf can always reference a fixed path
 ln -sf "$WALLPAPER" "${HOME}/.config/hypr/wallpaper.jpg" 2>/dev/null || true
@@ -38,8 +43,9 @@ echo "✓ Wallpaper set: $WALLPAPER (transition: $TRANSITION)"
 
 # Run matugen if available to generate matching color scheme
 if command -v matugen &>/dev/null; then
-    matugen image "$WALLPAPER"
+    matugen image "$WALLPAPER" --prefer saturation
     echo "✓ Colors generated with matugen"
-else
-    echo "  (install matugen to auto-generate colors from this wallpaper)"
+    pkill -USR1 kitty 2>/dev/null || true
+    pkill -SIGUSR2 waybar 2>/dev/null || true
+    hyprctl reload &>/dev/null || true
 fi

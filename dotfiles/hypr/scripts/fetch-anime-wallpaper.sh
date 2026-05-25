@@ -45,15 +45,25 @@ if $NSFW; then
 
     # Rule34 API: same Danbooru-style API, returns JSON array
     # Tags: animated wallpaper-like content, min resolution
-    BASE_TAGS="animated:false score:>20 width:>1280"
+    BASE_TAGS="score:>=20 width:>=1920 -animated -video"
     [[ -n "$EXTRA_QUERY" ]] && TAGS="${BASE_TAGS} ${EXTRA_QUERY}" || TAGS="$BASE_TAGS"
 
     ENCODED=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$TAGS" 2>/dev/null \
         || echo "$TAGS" | sed 's/ /+/g; s/:/%3A/g; s/>/%3E/g')
     PID=$(( RANDOM % 10 ))
-    API="https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=20&tags=${ENCODED}&pid=${PID}"
+    # Reads two-line key file: line 1 = user_id, line 2 = api_key
+    RULE34_USER_ID=""
+    RULE34_API_KEY=""
+    if [[ -f "${HOME}/.config/hypr/scripts/rule34.key" ]]; then
+        RULE34_USER_ID=$(sed -n '1p' "${HOME}/.config/hypr/scripts/rule34.key" | tr -d '[:space:]')
+        RULE34_API_KEY=$(sed -n '2p' "${HOME}/.config/hypr/scripts/rule34.key" | tr -d '[:space:]')
+    fi
+    API_KEY_PARAM=""
+    [[ -n "$RULE34_USER_ID" && -n "$RULE34_API_KEY" ]] && API_KEY_PARAM="&user_id=${RULE34_USER_ID}&api_key=${RULE34_API_KEY}"
 
-    get_count()   { echo "$1" | jq 'length' 2>/dev/null; }
+    API="https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&json=1&limit=20&tags=${ENCODED}&pid=${PID}${API_KEY_PARAM}"
+
+    get_count()   { echo "$1" | jq 'if type=="array" then length else 0 end' 2>/dev/null; }
     get_url()     { echo "$1" | jq -r ".[${2}].file_url // empty" 2>/dev/null; }
     get_id()      { echo "$1" | jq -r ".[${2}].id // empty" 2>/dev/null; }
 
@@ -85,11 +95,29 @@ json=$(curl -s --max-time 15 -A "Mozilla/5.0" "$API") || {
     exit 1
 }
 
+# Check for auth error (Rule34 returns a plain string when unauthenticated)
+if echo "$json" | jq -e 'type == "string"' &>/dev/null; then
+    msg=$(echo "$json" | jq -r '.')
+    notify-send "Wallpaper" "${SOURCE}: ${msg}" 2>/dev/null
+    echo "API error: $msg"
+    exit 1
+fi
+
 count=$(get_count "$json")
 if [[ -z "$count" || "$count" == "0" || "$count" == "null" ]]; then
     notify-send "Wallpaper" "No results from ${SOURCE}" 2>/dev/null
     echo "No results. Raw: $(echo "$json" | head -3)"
     exit 1
+fi
+
+# For Rule34, filter to landscape only (width > height)
+if $NSFW; then
+    json=$(echo "$json" | jq '[.[] | select(.width > .height)]')
+    count=$(echo "$json" | jq 'length')
+    if [[ "$count" == "0" ]]; then
+        notify-send "Wallpaper" "No landscape images found — try again" 2>/dev/null
+        exit 1
+    fi
 fi
 
 idx=$(( RANDOM % count ))
