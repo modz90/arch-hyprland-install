@@ -206,5 +206,9 @@ pkg zsh
 echo "==> Installing starship prompt"
 pkg starship
 
+echo "==> Installing hypr-backup (config backup GUI)"
+pkg python-gobject libadwaita
+bash "${REPO_DIR}/tools/hypr-backup/install.sh"
+
 echo ""
 echo "Done! Run 'Hyprland' to start the desktop."

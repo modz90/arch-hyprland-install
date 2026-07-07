@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Hypr Backup
+Comment=Backup and restore Hyprland configuration
+Exec=hypr-backup
+Icon=document-save
+Terminal=false
+Type=Application
+Categories=System;Settings;
+Keywords=backup;hyprland;config;restore;
