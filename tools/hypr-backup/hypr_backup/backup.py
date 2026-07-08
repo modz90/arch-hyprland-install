@@ -29,9 +29,12 @@ def _copy_category(cat: dict) -> None:
     dest_base.mkdir(exist_ok=True)
     for src_str in cat["paths"]:
         src = Path(src_str).expanduser()
-        if not src.exists():
-            continue
         dst = dest_base / src.name
+        if not src.exists():
+            # Source was deleted — remove stale copy so git records the deletion
+            if dst.exists():
+                shutil.rmtree(dst) if dst.is_dir() else dst.unlink()
+            continue
         if src.is_dir():
             if dst.exists():
                 shutil.rmtree(dst)
@@ -80,19 +83,43 @@ def list_snapshots() -> list:
     return snaps
 
 
-def diff_snapshot(old_hash: str, new_hash: str = "HEAD") -> str:
+def diff_snapshot(old_hash: str) -> str:
+    """Diff old_hash against the current live config (not just the last backup)."""
     _ensure_repo()
     try:
-        stat = _git("diff", "--stat", old_hash, new_hash).stdout
-        diff = _git("diff", old_hash, new_hash).stdout
+        # Copy live files into the repo working tree so the diff reflects
+        # actual current state, not just the last committed backup.
+        from .categories import CATEGORIES
+        for cat_dir in REPO_DIR.iterdir():
+            if cat_dir.name.startswith(".") or not cat_dir.is_dir():
+                continue
+            cat = next((c for c in CATEGORIES if c["id"] == cat_dir.name), None)
+            if cat:
+                _copy_category(cat)
+
+        _git("add", "-A")
+        stat = _git("diff", "--stat", "--cached", old_hash).stdout
+        diff = _git("diff", "--cached", old_hash).stdout
         return stat + "\n" + diff if stat.strip() else "(no differences)"
     except subprocess.CalledProcessError as exc:
         return exc.stderr or "diff failed"
+    finally:
+        # Unstage and restore working tree to HEAD, leaving no side effects.
+        try:
+            _git("reset", "HEAD")
+            _git("checkout", "HEAD", "--", ".")
+        except subprocess.CalledProcessError:
+            pass
 
 
 def restore_snapshot(snap_hash: str) -> None:
     _ensure_repo()
-    _git("checkout", snap_hash, "--", ".")
+    # Save current HEAD so we can return to it after the copy.
+    current_head = _git("rev-parse", "HEAD").stdout.strip()
+
+    # Reset working tree to exactly snap_hash — overlay checkout would leave
+    # files added in later commits untouched, causing them to be copied back.
+    _git("reset", "--hard", snap_hash)
 
     from .categories import CATEGORIES
     for cat_dir in REPO_DIR.iterdir():
@@ -114,7 +141,8 @@ def restore_snapshot(snap_hash: str) -> None:
                 src_home.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src_repo, src_home)
 
-    _git("checkout", "HEAD", "--", ".")
+    # Return the backup repo HEAD to the latest commit.
+    _git("reset", "--hard", current_head)
 
 
 def export_to_usb(snap_hash: str, usb_path: Path) -> Path:
@@ -145,14 +173,16 @@ def detect_usb_mounts() -> list:
         )
         data = json.loads(result.stdout)
         mounts = []
-        _collect_usb(data.get("blockdevices", []), mounts)
+        _collect_usb(data.get("blockdevices", []), mounts, "")
         return mounts
     except Exception:
         return []
 
 
-def _collect_usb(devices: list, mounts: list) -> None:
+def _collect_usb(devices: list, mounts: list, parent_tran: str) -> None:
     for dev in devices:
-        if dev.get("tran") == "usb" and dev.get("mountpoint"):
+        # tran is set on the disk node; partition children inherit it via parent_tran
+        tran = dev.get("tran") or parent_tran
+        if tran == "usb" and dev.get("mountpoint"):
             mounts.append(Path(dev["mountpoint"]))
-        _collect_usb(dev.get("children", []), mounts)
+        _collect_usb(dev.get("children", []), mounts, tran)
